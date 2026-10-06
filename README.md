@@ -5,8 +5,30 @@ API em Node.js (ES Modules) + Express + Prisma 7 (MySQL/MariaDB) com a **camada 
 > ⚠️ Este README ainda tem seções marcadas com `TODO` que o grupo precisa preencher (exigência da atividade).
 
 ---
+## 1. A visão geral do sistema
 
+> Somos uma plataforma de **cursos online E-learning**. Onde instrutores cadastram cursos e turmas,  e alunos se matriculam, realizam as disciplinas, recebem notas e emitem certificados. O backend é uma API em Node.js, Express e Prisma, e a **camada de serviços** concentra as regras de negócio e é o alvo dos testes unitários deste grupo.
 
+### As regras testadas foram:
+
+- **Pré Requisitos:** um curso pode exigir a conclusão de outros cursos antes da matrícula.
+- **Vagas:** cada turma tem número limitado de vagas e só aceita matrículas enquanto estiver aberta e com disponibilidade.
+- **Certificados:** o certificado só pode ser emitido pelo próprio aluno quando as condições de conclusão do curso são atendidas.
+- **Trancamento:** o aluno pode trancar e reativar a própria matrícula, respeitando as regras de status.
+- **Autenticação:** cadastro e login com token **(JWT)**, e controle de acesso por perfil (aluno e instrutor).
+
+## 2. Conceitos dos testes aplicados
+
+> Análise geral do projeto de como ele se adequa aos conceitos de aplicação de testes back-end
+
+## Pirâmide de Testes
+Divide os testes em camadas: **testes Unitários** na base, **testes de Integração** no meio e **testes ponta a ponta (E2E)** no topo. Quanto mais alto, mais lento, caro e frágil é o teste, por isso deve haver muitos testes na base e poucos no topo. Neste projeto o foco é a **base da pirâmide** adequando-se aos testes unitários dos services, que são rápidos, baratos de executar e não dependem de banco de dados. Todos eles seguem o padrão **AAA (Arrange, Act, Assert)**: preparar o cenário, executar a ação e verificar o resultado.
+
+### Mocks vs. Stubs
+**Stubs** são respostas prontas que fornecem dados fixos para o teste rodar, como um model que sempre devolve o mesmo curso. **Mocks** são objetos mais avançados, como o jest.fn(), que além de devolver valores também **verificam o comportamento**: se uma função específica foi chamada, com quais parâmetros e quantas vezes. Neste projeto, as dependências externas (banco de dados e e-mail) são isoladas com jest.fn(), de modo que cada teste exercita apenas a regra de negócio do service.
+
+### Padrão Factory
+O Factory é um padrão de projeto que **centraliza a criação de objetos fictícios** (fakes) usados nos testes, como alunos, cursos, turmas e matrículas. Com ele evitamos duplicar código ao preparar os cenários (fase *Arrange*) e, se o formato de um objeto mudar, a correção é feita em um só lugar. Neste projeto, as factories ficam em tests/factories/ e permitem sobrescrever apenas os campos relevantes de cada cenário.
 ## 3. Como Executar
 
 ### Pré-requisitos
