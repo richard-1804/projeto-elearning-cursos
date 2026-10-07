@@ -4,7 +4,7 @@ import {
   BusinessRuleError,
   ConflictError,
   ForbiddenError,
-  NotFoundError,
+  NotFoundError, 
 } from '../../src/errors/AppError.js';
 import { criarEstudante } from '../factories/studentFactory.js';
 import { criarTurma, criarEnrollment } from '../factories/enrollmentFactory.js';
@@ -56,7 +56,7 @@ describe('EnrollmentService', () => { // preparação dos dublês de teste
 
     customClock = jest.fn(() => new Date('2026-03-01T10:00:00Z'));
 
-    enrollmentService = new EnrollmentService({
+    enrollmentService = new EnrollmentService({ // Instancia o serviço injetando todos os dublês e regras
       enrollmentModel: mockEnrollmentModel,
       classModel: mockClassModel,
       courseModel: mockCourseModel,
