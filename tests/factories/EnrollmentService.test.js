@@ -255,6 +255,7 @@ describe('EnrollmentService', () => { // preparação dos dublês de teste
 
       mockEnrollmentModel.getEnrollmentById.mockResolvedValue(enrollment);
       mockEnrollmentModel.countEnrollmentsByClassAndStatus.mockResolvedValue(20);
+      mockEnrollmentModel.countEnrollmentsByUserAndStatus.mockResolvedValue(0); //
 
       // Act & Assert
       await expect(enrollmentService.reactivateEnrollment(1, enrollment.id_enrollments_pk)).rejects.toThrow(ConflictError);
