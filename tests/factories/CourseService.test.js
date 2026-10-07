@@ -6,6 +6,7 @@ describe('CourseService', () => {
   let courseService;
   let mockCourseModel;
 
+  //Prepara os dublês de teste (Mocks) antes de cada teste rodar
   beforeEach(() => {
     // Criação dos mocks do repositório
     mockCourseModel = {
@@ -21,30 +22,37 @@ describe('CourseService', () => {
       removePrerequisite: jest.fn(),
     };
 
+    // Injeção de dependência: passa o model mockado para o serviço real de cursos
     courseService = new CourseService({ courseModel: mockCourseModel });
   });
 
+  // Suíte de criação de curso
   describe('createCourse', () => {
     it('deve criar um curso com sucesso', async () => {
+      // Simula título livre no banco e criação bem-sucedida
       const courseData = { title: 'Node.js', description: 'Curso de Node', workload_hours: 40 };
       mockCourseModel.getCourseByTitle.mockResolvedValue(null);
       mockCourseModel.createCourse.mockResolvedValue({ id_courses_pk: 1, ...courseData });
 
+      //executa método real
       const result = await courseService.createCourse(courseData);
 
+      // Verifica se chamou as rotinas do banco e retornou o ID gerado
       expect(mockCourseModel.getCourseByTitle).toHaveBeenCalledWith('Node.js');
       expect(mockCourseModel.createCourse).toHaveBeenCalledWith(courseData);
       expect(result).toHaveProperty('id_courses_pk', 1);
     });
 
     it('deve lançar ConflictError se já existir um curso com o mesmo título', async () => {
+      //Simula que o título já existe no banco
       mockCourseModel.getCourseByTitle.mockResolvedValue({ id_courses_pk: 1, title: 'Node.js' });
-      await expect(
+      await expect( //Bloqueia duplicidade de nome lançando ConflictError
         courseService.createCourse({ title: 'Node.js', description: 'Desc', workload_hours: 40 })
       ).rejects.toThrow(ConflictError);
     });
   });
 
+  // Suíte de busca por id
   describe('getCourseById', () => {
     it('deve retornar o curso se encontrado', async () => {
       const course = { id_courses_pk: 1, title: 'Node.js' };
@@ -52,7 +60,7 @@ describe('CourseService', () => {
 
       const result = await courseService.getCourseById(1);
 
-      expect(result).toEqual(course);
+      expect(result).toEqual(course); // confirmaz retorno dos dados do curso
     });
 
     it('deve lançar NotFoundError se o curso não for encontrado', async () => {
@@ -62,11 +70,13 @@ describe('CourseService', () => {
     });
   });
 
+  //Suíte de atualizção de curso
   describe('updateCourse', () => {
     it('deve atualizar o curso com sucesso', async () => {
       const courseId = 1;
       const updateData = { title: 'Novo Título' };
-
+      
+      // Curso existe e o novo título não está em uso por ninguém
       mockCourseModel.getCourseById.mockResolvedValue({ id_courses_pk: courseId, title: 'Título Antigo' });
       mockCourseModel.getCourseByTitle.mockResolvedValue(null);
       mockCourseModel.updateCourse.mockResolvedValue({ id_courses_pk: courseId, ...updateData });
