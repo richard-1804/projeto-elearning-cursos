@@ -9,19 +9,19 @@ import {
 import { criarEstudante } from '../factories/studentFactory.js';
 import { criarTurma, criarEnrollment } from '../factories/enrollmentFactory.js';
 
-describe('EnrollmentService', () => {
-  let enrollmentService;
-  let mockEnrollmentModel;
-  let mockClassModel;
-  let mockCourseModel;
-  let mockUserModel;
-  let mockEmailGateway;
-  let mockLogger;
-  let customClock;
+describe('EnrollmentService', () => { // preparação dos dublês de teste
+  let enrollmentService; //Instância real do serviço que será testado
+  let mockEnrollmentModel; //Banco de dados de matrículas
+  let mockClassModel; //Banco de dados de turmas
+  let mockCourseModel; //Banco de dados de cursos
+  let mockUserModel; //Banco de dados de usuários/estudantes
+  let mockEmailGateway; // Serviço externo que envia e-mails
+  let mockLogger; // Serviço que grava logs de erros
+  let customClock; // Relógio/Data simulada
 
   const defaultRules = {
-    LOCK_DEADLINE_PERCENT: 25,
-    MAX_LOCKED_ENROLLMENTS_PER_USER: 2,
+    LOCK_DEADLINE_PERCENT: 25, // Só permite trancar a matrícula aos 25% de duração
+    MAX_LOCKED_ENROLLMENTS_PER_USER: 2, //só permite ter duas matrículas trancadas
   };
 
   beforeEach(() => {
